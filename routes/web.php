@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\LocationController;
+use App\Http\Controllers\MaintenanceController;
 use App\Http\Controllers\PeopleController;
 use JeroenNoten\LaravelAdminLte\Components\Form\Select;
 
@@ -34,6 +35,10 @@ Route::middleware(['auth:sanctum',config('jetstream.auth_session'),'verified',
     Route::get('/peoples/{id}', [PeopleController::class, 'show'])->name('peoples.show');
     Route::get('/peoples/excel', [PeopleController::class, 'exportExcel'])->name('peoples.excel');
     Route::get('/peoples/pdf', [PeopleController::class, 'exportPdf'])->name('peoples.pdf');
+
+    // maintenances.web
+    Route::get('maintenances/{id}/report', [MaintenanceController::class, 'generateReport'])->name('maintenances.report');
+
 
 
 });

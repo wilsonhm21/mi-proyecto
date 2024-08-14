@@ -44,15 +44,9 @@ class PeopleController extends Controller
     // Ordenar por nombres y aplicar paginación
     $peoples = $query->orderBy('nombres')->paginate(10);
 
-    // Dividir las personas en activas e inactivas
-    $activePeople = $peoples->filter(function($person) {
-        return $person->estado === 'Activo';
-    });
-    $inactivePeople = $peoples->filter(function($person) {
-        return $person->estado === 'Inactivo';
-    });
 
-    return view('peoples.index', compact('peoples', 'activePeople', 'inactivePeople'));
+
+    return view('peoples.index', compact('peoples'));
 }
 
     // Método para mostrar el formulario de creación de personas

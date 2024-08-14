@@ -19,8 +19,9 @@ class Department extends Model
         return $this->belongsTo(Location::class);
     }
 
-    public function head()
+    public function headOfDepartment()
     {
-        return $this->belongsTo(People::class, 'head_of_department_id');
+        return $this->hasOne(HeadOfDepartment::class);
     }
+
 }

@@ -50,4 +50,8 @@ class People extends Model
     {
         return $this->belongsTo(Departamento::class);
     }
+    public function headOfDepartment()
+    {
+        return $this->hasOne(HeadOfDepartment::class, 'people_id');
+    }
 }

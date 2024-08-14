@@ -369,7 +369,7 @@ return [
         ],
         [
             'text'        => 'Mantenimiento',
-            'route'       => '',
+            'url'       => '/maintenances',
             'icon'        => 'far fas fa-columns',
         ],
 

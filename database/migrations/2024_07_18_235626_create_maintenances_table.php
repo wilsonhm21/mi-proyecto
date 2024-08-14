@@ -17,7 +17,7 @@ return new class extends Migration
             $table->text('description');
             $table->string('fecha_realizacion');
             $table->string('repuestos')->nullable();
-            $table->date('proxima_fecha_mantenimiento')->nullable();
+            $table->string('proxima_fecha_mantenimiento')->nullable();
             $table->timestamps();
 
             $table->foreign('asset_id')->references('id')->on('assets')->onDelete('cascade');
