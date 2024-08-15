@@ -45,6 +45,7 @@
                     <table class="table table-bordered table-striped">
                         <thead>
                             <tr>
+                                <th>Vista</th> <!-- Nueva columna para el botón de vista -->
                                 <th>Nombres y apellidos</th>
                                 <th>DNI</th>
                                 <th>Género</th>
@@ -58,30 +59,34 @@
                                 <th>Distrito</th>
                                 <th>Cargo</th>
                                 <th>Departamento de Trabajo</th>
-                                <th>Acciones</th>
+                                <th>Acciones</th> <!-- Columna para los botones de editar y borrar -->
                             </tr>
                         </thead>
                         <tbody>
                             @foreach($peoples as $person)
                                 <tr>
+                                    <td>
+                                        <!-- Botón de Vista -->
+                                        <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#detailsModal"
+                                            data-name="{{ $person->nombres }}, {{ $person->ape_paterno }} {{ $person->ape_materno }}"
+                                            data-dni="{{ $person->dni }}"
+                                            data-genero="{{ $person->genero == 'M' ? 'Masculino' : 'Femenino' }}"
+                                            data-fecha_nacimiento="{{ $person->fecha_nacimiento }}"
+                                            data-estado="{{ $person->estado }}"
+                                            data-direccion="{{ $person->direccion }}"
+                                            data-telefono="{{ $person->telefono }}"
+                                            data-correo="{{ $person->correo_electronico }}"
+                                            data-departamento="{{ $person->departamento->name ?? 'Desconocido' }}"
+                                            data-provincia="{{ $person->provincia->name ?? 'Desconocido' }}"
+                                            data-distrito="{{ $person->distrito->name ?? 'Desconocido' }}"
+                                            data-cargo="{{ $person->position->nombre }}"
+                                            data-departamento_trabajo="{{ $person->department->nombre }}"
+                                            data-profile-picture="{{ asset('images/profiles/' . $person->profile_picture) }}">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </td>
                                     <td style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px;">
-                                        <a href="#" class="btn btn-info btn-sm" data-toggle="modal" data-target="#detailsModal"
-                                           data-name="{{ $person->nombres }}, {{ $person->ape_paterno }} {{ $person->ape_materno }}"
-                                           data-dni="{{ $person->dni }}"
-                                           data-genero="{{ $person->genero == 'M' ? 'Masculino' : 'Femenino' }}"
-                                           data-fecha_nacimiento="{{ $person->fecha_nacimiento }}"
-                                           data-estado="{{ $person->estado }}"
-                                           data-direccion="{{ $person->direccion }}"
-                                           data-telefono="{{ $person->telefono }}"
-                                           data-correo="{{ $person->correo_electronico }}"
-                                           data-departamento="{{ $person->departamento->name ?? 'Desconocido' }}"
-                                           data-provincia="{{ $person->provincia->name ?? 'Desconocido' }}"
-                                           data-distrito="{{ $person->distrito->name ?? 'Desconocido' }}"
-                                           data-cargo="{{ $person->position->nombre }}"
-                                           data-departamento_trabajo="{{ $person->department->nombre }}"
-                                           data-profile-picture="{{ asset('images/profiles/' . $person->profile_picture) }}">
-                                            {{ $person->nombres }}, {{ $person->ape_paterno }} {{ $person->ape_materno }}
-                                        </a>
+                                        {{ $person->nombres }}, {{ $person->ape_paterno }} {{ $person->ape_materno }}
                                     </td>
                                     <td>{{ $person->dni }}</td>
                                     <td>{{ $person->genero == 'M' ? 'Masculino' : 'Femenino' }}</td>
@@ -96,6 +101,7 @@
                                     <td>{{ $person->position->nombre }}</td>
                                     <td>{{ $person->department->nombre }}</td>
                                     <td>
+                                        <!-- Botones de Editar y Borrar -->
                                         <a href="{{ route('peoples.edit', $person->id) }}" class="btn btn-warning btn-sm" title="Editar">
                                             <i class="fas fa-edit"></i>
                                         </a>
