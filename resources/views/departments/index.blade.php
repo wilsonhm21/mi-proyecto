@@ -3,24 +3,39 @@
 @section('title', 'Departamentos')
 
 @section('content_header')
-<h1>Departamentos</h1>
+    <h1>Departamentos</h1>
 @stop
 
 @section('content')
 
 <div class="row">
     <div class="col-md-12">
-        @include('shared.error-message')
-        @include('shared.success-message') <!-- Incluye un mensaje de éxito si está presente -->
-
         <div class="card">
             <div class="card-header">
-                <h3 class="card-title">Lista de Departamentos</h3>
-                <div class="card-tools">
-                    <a href="{{ route('departments.create') }}" class="btn btn-primary">Nuevo Departamento</a>
+                <div class="d-flex justify-content-between align-items-center">
+                    <!-- Título -->
+                    <h3 class="card-title mb-0">Lista de Departamentos</h3>
+
+                    <!-- Contenedor de Búsqueda y Botón -->
+                    <div class="d-flex">
+                        <!-- Formulario de Búsqueda -->
+                        <form method="GET" action="{{ route('departments.index') }}" class="d-inline-block mr-2">
+                            <div class="input-group">
+                                <input type="text" name="search" class="form-control" placeholder="Buscar por nombre" value="{{ request('search') }}">
+                                <div class="input-group-append">
+                                    <button type="submit" class="btn btn-success">Buscar</button>
+                                </div>
+                            </div>
+                        </form>
+
+                        <!-- Botón Nuevo Departamento -->
+                        <a href="{{ route('departments.create') }}" class="btn btn-primary">
+                            Nuevo Departamento
+                        </a>
+                    </div>
                 </div>
             </div>
-            <!-- /.card-header -->
+
             <div class="card-body">
                 <table class="table table-bordered">
                     <thead>
@@ -34,33 +49,46 @@
                     </thead>
                     <tbody>
                         @forelse($departments as $department)
-                            <tr>
-                                <td>{{ $loop->iteration }}</td>
-                                <td>{{ $department->nombre }}</td>
-                                <td>{{ $department->descripcion }}</td>
-                                <td>{{ $department->location ? $department->location->direccion : 'No asignado' }}</td>
-                                <td>
-                                    <a href="{{ route('departments.show', $department->id) }}" class="btn btn-info btn-sm">Ver</a>
-                                    <a href="{{ route('departments.edit', $department->id) }}" class="btn btn-warning btn-sm">Editar</a>
-                                    <form action="{{ route('departments.destroy', $department->id) }}" method="POST" style="display:inline;">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('¿Está seguro de eliminar este departamento?')">Eliminar</button>
-                                    </form>
-                                </td>
-                            </tr>
+                        <tr>
+                            <td>{{ $loop->iteration }}</td>
+                            <td>{{ $department->nombre }}</td>
+                            <td>{{ $department->descripcion }}</td>
+                            <td>{{ $department->location ? $department->location->direccion : 'No asignado' }}</td>
+                            <td>
+                                <a href="{{ route('departments.show', $department->id) }}" class="btn btn-info btn-sm">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                                <a href="{{ route('departments.edit', $department->id) }}" class="btn btn-warning btn-sm">
+                                    <i class="fas fa-pencil-alt"></i>
+                                </a>
+                                <form action="{{ route('departments.destroy', $department->id) }}" method="POST" style="display:inline;" onsubmit="return confirm('¿Está seguro de eliminar este departamento?');">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-danger btn-sm">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
                         @empty
-                            <tr>
-                                <td colspan="5" class="text-center">No hay departamentos disponibles.</td>
-                            </tr>
+                        <tr>
+                            <td colspan="5" class="text-center">No hay departamentos disponibles.</td>
+                        </tr>
                         @endforelse
                     </tbody>
                 </table>
             </div>
-            <!-- /.card-body -->
+
+            <div class="card-footer">
+                {{ $departments->links() }} <!-- Paginación -->
+            </div>
         </div>
-        <!-- /.card -->
     </div>
 </div>
 
+@stop
+
+@section('css')
+    <!-- Font Awesome CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 @stop

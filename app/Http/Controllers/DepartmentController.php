@@ -11,11 +11,17 @@ class DepartmentController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $departments = Department::all(); // Puedes usar paginación si prefieres
+        $search = $request->input('search');
+
+        $departments = Department::when($search, function($query, $search) {
+            return $query->where('nombre', 'like', "%{$search}%");
+        })->paginate(10); // Cambia el número a la cantidad de registros que deseas por página
+
         return view('departments.index', compact('departments'));
     }
+
 
     /**
      * Show the form for creating a new resource.

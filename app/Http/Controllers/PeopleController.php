@@ -30,24 +30,35 @@ class PeopleController extends Controller
     }
     // Método para mostrar la lista de personas
     public function index(Request $request)
-{
-    $query = People::with(['departamento', 'provincia', 'distrito']);
+    {
+        $query = People::with(['departamento', 'provincia', 'distrito']);
 
-    if ($request->has('search') && !empty($request->input('search'))) {
-        $search = $request->input('search');
-        $query->where(function($q) use ($search) {
-            $q->where('nombres', 'like', "%{$search}%")
-              ->orWhere('dni', 'like', "%{$search}%");
-        });
+        // Aplicar filtro de búsqueda
+        if ($request->has('search') && !empty($request->input('search'))) {
+            $search = $request->input('search');
+            $query->where(function($q) use ($search) {
+                $q->where('nombres', 'like', "%{$search}%")
+                  ->orWhere('dni', 'like', "%{$search}%");
+            });
+        }
+
+        // Aplicar filtro de año
+        if ($request->has('year') && !empty($request->input('year'))) {
+            $year = $request->input('year');
+            $query->whereYear('fecha_nacimiento', $year);
+        }
+
+        // Ordenar por nombres y aplicar paginación
+        $peoples = $query->orderBy('nombres')->paginate(10);
+
+        // Pasar variables a la vista
+        return view('peoples.index', [
+            'peoples' => $peoples,
+            'search' => $request->input('search'),
+            'year' => $request->input('year'),
+        ]);
     }
 
-    // Ordenar por nombres y aplicar paginación
-    $peoples = $query->orderBy('nombres')->paginate(10);
-
-
-
-    return view('peoples.index', compact('peoples'));
-}
 
     // Método para mostrar el formulario de creación de personas
     public function create()

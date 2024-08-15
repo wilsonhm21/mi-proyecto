@@ -28,7 +28,9 @@
                         </div>
                     </div>
                 </form>
-                <a href="{{ route('positions.create') }}" class="btn btn-primary">Nuevo Cargo</a>
+                <a href="{{ route('positions.create') }}" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> Nuevo Cargo
+                </a>
             </div>
         </div>
     </div>
@@ -53,11 +55,15 @@
                         <td>{{ $position->fecha_fin }}</td>
                         <td>{{ $position->department ? $position->department->nombre : 'No asignado' }}</td>
                         <td>
-                            <a href="{{ route('positions.edit', $position->id) }}" class="btn btn-warning btn-sm">Editar</a>
+                            <a href="{{ route('positions.edit', $position->id) }}" class="btn btn-warning btn-sm">
+                                <i class="fas fa-edit"></i>
+                            </a>
                             <form action="{{ route('positions.destroy', $position->id) }}" method="POST" style="display:inline;">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('¿Estás seguro de que deseas eliminar esta posición?');">Eliminar</button>
+                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('¿Estás seguro de que deseas eliminar esta posición?');">
+                                    <i class="fas fa-trash"></i>
+                                </button>
                             </form>
                         </td>
                     </tr>
@@ -67,4 +73,19 @@
     </div>
 </div>
 
+@stop
+
+@section('js')
+<script>
+    // Mostrar alertas nativas
+    document.addEventListener('DOMContentLoaded', function () {
+        @if(session('success'))
+            alert('{{ session('success') }}');
+        @endif
+
+        @if(session('error'))
+            alert('{{ session('error') }}');
+        @endif
+    });
+</script>
 @stop

@@ -28,56 +28,57 @@
                                     <h3 class="card-title">Piso: {{ $piso }}</h3>
                                 </div>
                                 <div class="card-body">
-                                    <table id="list-locations-{{ $piso }}" class="table table-bordered table-striped dataTable dtr-inline"
-                                        aria-describedby="list-locations-{{ $piso }}">
-                                        <thead>
-                                            <tr>
-                                                <th>ID</th>
-                                                <th>Dirección</th>
-                                                <th>Departamento</th>
-                                                <th>Provincia</th>
-                                                <th>Distrito</th>
-                                                <th>Latitud</th>
-                                                <th>Longitud</th>
-                                                <th>Acciones</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach($locaciones as $location)
-                                            <tr>
-                                                <td>{{ $location->id }}</td>
-                                                <td>{{ $location->direccion }}</td>
-                                                <td>{{ $location->departamento->name ?? 'Desconocido' }}</td>
-                                                <td>{{ $location->provincia->name ?? 'Desconocido' }}</td>
-                                                <td>{{ $location->distrito->name ?? 'Desconocido' }}</td>
-                                                <td>{{ $location->latitud }}</td>
-                                                <td>{{ $location->longitud }}</td>
-                                                <td style="display: inline-block; width: 110px;">
-                                                    <a href="{{route('locations.edit',[$location->id])}}"
-                                                        class="btn btn-sm btn-success float-left">Editar</a>
-                                                    <form action="{{route('locations.destroy', $location->id)}}" method="post" class="delete-location">
-                                                        @csrf
-                                                        @method('DELETE')
-                                                        <button type="submit" class="btn btn-sm btn-danger">Eliminar</button>
-                                                    </form>
-
-                                                </td>
-                                            </tr>
-                                            @endforeach
-                                        </tbody>
-                                    </table>
+                                    <div class="table-wrapper">
+                                        <table id="list-locations-{{ $piso }}" class="table table-bordered table-striped dataTable dtr-inline"
+                                            aria-describedby="list-locations-{{ $piso }}">
+                                            <thead>
+                                                <tr>
+                                                    <th>ID</th>
+                                                    <th>Dirección</th>
+                                                    <th>Departamento</th>
+                                                    <th>Provincia</th>
+                                                    <th>Distrito</th>
+                                                    <th>Latitud</th>
+                                                    <th>Longitud</th>
+                                                    <th>Acciones</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach($locaciones as $location)
+                                                <tr>
+                                                    <td>{{ $location->id }}</td>
+                                                    <td>{{ $location->direccion }}</td>
+                                                    <td>{{ $location->departamento->name ?? 'Desconocido' }}</td>
+                                                    <td>{{ $location->provincia->name ?? 'Desconocido' }}</td>
+                                                    <td>{{ $location->distrito->name ?? 'Desconocido' }}</td>
+                                                    <td>{{ $location->latitud }}</td>
+                                                    <td>{{ $location->longitud }}</td>
+                                                    <td style="width: 110px;">
+                                                        <a href="{{route('locations.edit',[$location->id])}}" class="btn btn-sm btn-warning">
+                                                            <i class="fas fa-pencil-alt"></i>
+                                                        </a>
+                                                        <form action="{{route('locations.destroy', $location->id)}}" method="post" class="delete-location d-inline">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="submit" class="btn btn-sm btn-danger">
+                                                                <i class="fas fa-trash-alt"></i>
+                                                            </button>
+                                                        </form>
+                                                    </td>
+                                                </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                     @endforeach
                 </div>
-
             </div>
-
         </div>
     </div>
-
 @stop
 
 @section('js')
@@ -109,13 +110,7 @@ $(function() {
         "responsive": true,
         "lengthChange": false,
         "autoWidth": false,
-        "search": "Pesquisar",
-        "paginate": {
-            "next": "Próximo",
-            "previous": "Anterior",
-            "first": "Primeiro",
-            "last": "Último"
-        },
+        "scrollX": true,
         "language": {
             "url": '//cdn.datatables.net/plug-ins/1.13.7/i18n/pt-BR.json',
         },
