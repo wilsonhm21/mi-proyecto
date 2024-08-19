@@ -24,7 +24,7 @@ class LocationController extends Controller
     // Display a listing of the resource.
     public function index()
     {
-        $locations = Location::all()->groupBy('piso');
+        $locations = Location::all();
         return view('locations.index', compact('locations'));
     }
 
@@ -42,7 +42,6 @@ class LocationController extends Controller
     {
         $request->validate([
             'direccion' => 'required|string|max:255',
-            'piso' => 'required|string|max:255',
             'distrito_id' => 'required|exists:distritos,id',
             'provincia_id' => 'required|exists:provincias,id',
             'departamento_id' => 'required|exists:departamentos,id',
@@ -61,10 +60,16 @@ class LocationController extends Controller
     }
 
     // Show the form for editing the specified resource.
-    public function edit(Location $location)
-    {
-        return view('locations.edit', compact('location'));
-    }
+    public function edit($id)
+{
+    $location = Location::findOrFail($id);
+    $departamentos = Departamento::all(); // Asegúrate de tener todos los departamentos
+    $provincias = Provincia::where('departamento_id', $location->departamento_id)->get(); // Provincias del departamento seleccionado
+    $distritos = Distrito::where('provincia_id', $location->provincia_id)->get(); // Distritos de la provincia seleccionada
+
+    return view('locations.edit', compact('location', 'departamentos', 'provincias', 'distritos'));
+}
+
 
     // Update the specified resource in storage.
     public function update(Request $request, Location $location)

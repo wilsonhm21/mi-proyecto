@@ -15,12 +15,35 @@ class DepartmentController extends Controller
     {
         $search = $request->input('search');
 
-        $departments = Department::when($search, function($query, $search) {
-            return $query->where('nombre', 'like', "%{$search}%");
-        })->paginate(10); // Cambia el número a la cantidad de registros que deseas por página
+        // Inicializa la consulta de departamentos
+        $query = Department::query();
 
-        return view('departments.index', compact('departments'));
+        // Aplica filtro de búsqueda por nombre
+        if ($search) {
+            $query->where('nombre', 'like', "%{$search}%");
+        }
+
+        // Obtener departamentos y paginación
+        $departments = $query->paginate(10);
+
+        // Agrupar departamentos por piso y ubicación
+        $departmentsGroupedByFloorAndLocation = $query->get()->groupBy(function($department) {
+            return $department->location_id . '-' . $department->piso;
+        });
+
+        // Obtener todas las ubicaciones disponibles para el filtro (si aún quieres mostrar el filtro de ubicación en la vista)
+        $locations = Location::all();
+
+        return view('departments.index', [
+            'departments' => $departments,
+            'departmentsGroupedByFloorAndLocation' => $departmentsGroupedByFloorAndLocation,
+            'locations' => $locations
+        ]);
     }
+
+
+
+
 
 
     /**
@@ -40,6 +63,7 @@ class DepartmentController extends Controller
     {
         $request->validate([
             'nombre' => 'required|string|max:255|unique:departments',
+            'piso' => 'required|string|max:255',
             'descripcion' => 'required|string|max:255',
             'location_id' => 'nullable|exists:locations,id',
         ]);
@@ -73,6 +97,7 @@ class DepartmentController extends Controller
     {
         $request->validate([
             'nombre' => 'required|string|max:255|unique:departments,nombre,' . $department->id,
+            'piso' => 'required|string|max:255',
             'descripcion' => 'required|string|max:255',
             'location_id' => 'nullable|exists:locations,id',
         ]);

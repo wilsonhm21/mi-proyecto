@@ -37,11 +37,13 @@
             </div>
 
             <div class="card-body">
-                <table class="table table-bordered">
+                <!-- Tabla Principal (Opcional) -->
+                <table class="table table-bordered mb-4">
                     <thead>
                         <tr>
                             <th>#</th>
                             <th>Nombre</th>
+                            <th>Piso</th>
                             <th>Descripción</th>
                             <th>Ubicación</th>
                             <th>Acciones</th>
@@ -52,6 +54,7 @@
                         <tr>
                             <td>{{ $loop->iteration }}</td>
                             <td>{{ $department->nombre }}</td>
+                            <td>{{ $department->piso }}</td>
                             <td>{{ $department->descripcion }}</td>
                             <td>{{ $department->location ? $department->location->direccion : 'No asignado' }}</td>
                             <td>
@@ -72,11 +75,70 @@
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="5" class="text-center">No hay departamentos disponibles.</td>
+                            <td colspan="6" class="text-center">No hay departamentos disponibles.</td>
                         </tr>
                         @endforelse
                     </tbody>
                 </table>
+
+                <!-- Tablas Agrupadas por Piso y Ubicación -->
+                @foreach($departmentsGroupedByFloorAndLocation as $key => $departmentsGroup)
+                    @php
+                        // Dividir la clave para obtener ubicación y piso
+                        list($locationId, $floor) = explode('-', $key);
+                        $location = $locations->find($locationId);
+                    @endphp
+
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h4 class="card-title">
+                                {{ $location ? $location->direccion : 'Desconocida' }} - Piso {{ $floor }}
+                            </h4>
+                        </div>
+                        <div class="card-body">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Nombre</th>
+                                        <th>Descripción</th>
+                                        <th>Ubicación</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @forelse($departmentsGroup as $department)
+                                    <tr>
+                                        <td>{{ $loop->iteration }}</td>
+                                        <td>{{ $department->nombre }}</td>
+                                        <td>{{ $department->descripcion }}</td>
+                                        <td>{{ $department->location ? $department->location->direccion : 'No asignado' }}</td>
+                                        <td>
+                                            <a href="{{ route('departments.show', $department->id) }}" class="btn btn-info btn-sm">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                            <a href="{{ route('departments.edit', $department->id) }}" class="btn btn-warning btn-sm">
+                                                <i class="fas fa-pencil-alt"></i>
+                                            </a>
+                                            <form action="{{ route('departments.destroy', $department->id) }}" method="POST" style="display:inline;" onsubmit="return confirm('¿Está seguro de eliminar este departamento?');">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-danger btn-sm">
+                                                    <i class="fas fa-trash-alt"></i>
+                                                </button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                    @empty
+                                    <tr>
+                                        <td colspan="5" class="text-center">No hay departamentos en este piso.</td>
+                                    </tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                @endforeach
             </div>
 
             <div class="card-footer">

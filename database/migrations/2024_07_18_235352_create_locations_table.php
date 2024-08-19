@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('locations', function (Blueprint $table) {
             $table->id();
             $table->string('direccion');
-            $table->string('piso');
             $table->string('distrito_id');
             $table->string('provincia_id');
             $table->string('departamento_id');

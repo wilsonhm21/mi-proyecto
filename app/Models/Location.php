@@ -10,7 +10,6 @@ class Location extends Model
     use HasFactory;
     protected $fillable = [
         'direccion',
-        'piso',
         'distrito_id',
         'provincia_id',
         'departamento_id',

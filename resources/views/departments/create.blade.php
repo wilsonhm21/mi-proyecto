@@ -40,7 +40,16 @@
                     </div>
 
                     <div class="row">
-                        <div class="form-group col-md-12">
+                        <div class="form-group col-md-6">
+                            <label for="piso">Piso</label>
+                            <input type="text" class="form-control @error('piso') is-invalid @enderror" name="piso" id="piso"
+                                placeholder="Ingrese el piso del departamento" value="{{ old('piso') }}" required>
+                            @error('piso')
+                                <div class="text-danger">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="form-group col-md-6">
                             <label for="location_id">Ubicación</label>
                             <select class="form-control @error('location_id') is-invalid @enderror" name="location_id" id="location_id">
                                 <option value="">Seleccione una ubicación</option>

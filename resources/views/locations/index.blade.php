@@ -15,22 +15,21 @@
         <div class="card">
             <div class="card-header">
                 <h3 class="card-title">Lista de Locaciones</h3>
-                <a href="{{route('locations.create')}}" class="btn btn-sm btn-success float-right">NUEVA LOCACIÓN</a>
+                <a href="{{ route('locations.create') }}" class="btn btn-sm btn-success float-right">NUEVA LOCACIÓN</a>
             </div>
 
             <div class="card-body">
                 <div id="list" class="dataTables_wrapper dt-bootstrap4">
-                    @foreach($locations as $piso => $locaciones)
                     <div class="row mb-3">
                         <div class="col-12">
                             <div class="card">
                                 <div class="card-header">
-                                    <h3 class="card-title">Piso: {{ $piso }}</h3>
+                                    <h3 class="card-title">Todas las Locaciones</h3>
                                 </div>
                                 <div class="card-body">
                                     <div class="table-wrapper">
-                                        <table id="list-locations-{{ $piso }}" class="table table-bordered table-striped dataTable dtr-inline"
-                                            aria-describedby="list-locations-{{ $piso }}">
+                                        <table id="list-locations" class="table table-bordered table-striped dataTable dtr-inline"
+                                            aria-describedby="list-locations">
                                             <thead>
                                                 <tr>
                                                     <th>ID</th>
@@ -44,7 +43,7 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                @foreach($locaciones as $location)
+                                                @foreach($locations as $location)
                                                 <tr>
                                                     <td>{{ $location->id }}</td>
                                                     <td>{{ $location->direccion }}</td>
@@ -54,10 +53,10 @@
                                                     <td>{{ $location->latitud }}</td>
                                                     <td>{{ $location->longitud }}</td>
                                                     <td style="width: 110px;">
-                                                        <a href="{{route('locations.edit',[$location->id])}}" class="btn btn-sm btn-warning">
+                                                        <a href="{{ route('locations.edit', [$location->id]) }}" class="btn btn-sm btn-warning">
                                                             <i class="fas fa-pencil-alt"></i>
                                                         </a>
-                                                        <form action="{{route('locations.destroy', $location->id)}}" method="post" class="delete-location d-inline">
+                                                        <form action="{{ route('locations.destroy', $location->id) }}" method="post" class="delete-location d-inline">
                                                             @csrf
                                                             @method('DELETE')
                                                             <button type="submit" class="btn btn-sm btn-danger">
@@ -74,7 +73,6 @@
                             </div>
                         </div>
                     </div>
-                    @endforeach
                 </div>
             </div>
         </div>
@@ -87,7 +85,7 @@
 <script>
 Swal.fire({
     title: "Excluido!",
-    text: '<?= session('successDel')  ?>',
+    text: '{{ session('successDel') }}',
     icon: "success"
 });
 </script>
@@ -97,7 +95,7 @@ Swal.fire({
 <script>
 Swal.fire({
     title: "Atencion!",
-    text: '<?= session('errorDel')  ?>',
+    text: '{{ session('errorDel') }}',
     icon: "warning"
 });
 </script>
@@ -105,8 +103,7 @@ Swal.fire({
 
 <script>
 $(function() {
-    @foreach($locations as $piso => $locaciones)
-    $("#list-locations-{{ $piso }}").DataTable({
+    $("#list-locations").DataTable({
         "responsive": true,
         "lengthChange": false,
         "autoWidth": false,
@@ -115,7 +112,6 @@ $(function() {
             "url": '//cdn.datatables.net/plug-ins/1.13.7/i18n/pt-BR.json',
         },
     });
-    @endforeach
 
     $('.delete-location').submit(function(ev) {
         ev.preventDefault();

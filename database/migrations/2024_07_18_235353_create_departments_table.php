@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('departments', function (Blueprint $table) {
             $table->id();
             $table->string('nombre')->unique();
+            $table->string('piso');
             $table->string('descripcion');
 
             // Relación con la tabla 'ubicaciones' (opcional)
