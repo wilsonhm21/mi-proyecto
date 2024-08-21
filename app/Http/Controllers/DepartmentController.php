@@ -23,13 +23,16 @@ class DepartmentController extends Controller
             $query->where('nombre', 'like', "%{$search}%");
         }
 
-        // Obtener departamentos y paginación
-        $departments = $query->paginate(10);
+        // Obtener departamentos sin paginación para la agrupación
+        $departmentsWithoutPagination = $query->get();
 
         // Agrupar departamentos por piso y ubicación
-        $departmentsGroupedByFloorAndLocation = $query->get()->groupBy(function($department) {
+        $departmentsGroupedByFloorAndLocation = $departmentsWithoutPagination->groupBy(function($department) {
             return $department->location_id . '-' . $department->piso;
         });
+
+        // Obtener departamentos con paginación
+        $departments = $query->paginate(10);
 
         // Obtener todas las ubicaciones disponibles para el filtro (si aún quieres mostrar el filtro de ubicación en la vista)
         $locations = Location::all();
@@ -40,6 +43,8 @@ class DepartmentController extends Controller
             'locations' => $locations
         ]);
     }
+
+
 
 
 
