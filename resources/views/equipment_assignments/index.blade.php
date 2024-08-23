@@ -54,7 +54,7 @@
                             <td>{{ $assignment->people->nombres }}</td>
                             <td>
                                 <a href="{{ route('equipment_assignments.edit', $assignment->id) }}" class="btn btn-warning btn-sm">Editar</a>
-                                <form action="{{ route('equipment_assignments.destroy', $assignment->id) }}" method="POST" style="display:inline-block;">
+                                <form action="{{ route('equipment_assignments.destroy', $assignment->id) }}" method="POST" class="d-inline-block delete-form">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
@@ -72,4 +72,49 @@
     </div>
 </div>
 
+<!-- Modal de Confirmación -->
+<div class="modal fade" id="confirmationModal" tabindex="-1" role="dialog" aria-labelledby="confirmationModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmationModalLabel">Confirmación de Eliminación</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                ¿Estás seguro de que quieres eliminar este registro? Esta acción no se puede deshacer.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                <form id="deleteForm" method="POST" style="display: inline;">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="btn btn-danger">Eliminar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@stop
+
+@section('js')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    let deleteForm = document.getElementById('deleteForm');
+
+    document.querySelectorAll('form.delete-form').forEach(form => {
+        form.addEventListener('submit', function(event) {
+            event.preventDefault(); // Previene el envío inmediato del formulario
+
+            // Configura el formulario de eliminación
+            deleteForm.action = form.action; // Establece la acción del formulario de eliminación
+
+            // Muestra el modal
+            $('#confirmationModal').modal('show');
+        });
+    });
+});
+</script>
 @stop
