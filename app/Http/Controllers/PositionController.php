@@ -15,9 +15,17 @@ class PositionController extends Controller
      */
     public function index()
     {
-        $positions = Position::with('department')->get();
-        return view('positions.index', compact('positions'));
+        // Obtén todos los departamentos y sus posiciones relacionadas
+        $departments = Department::with('positions')->get();
+
+        // Agrupa las posiciones por departamento
+        $positionsGroupedByDepartment = $departments->mapWithKeys(function ($department) {
+            return [$department->id => $department->positions];
+        });
+
+        return view('positions.index', compact('positionsGroupedByDepartment', 'departments'));
     }
+
 
     /**
      * Mostrar el formulario para crear una nueva posición.
@@ -26,6 +34,7 @@ class PositionController extends Controller
      */
     public function create()
     {
+        // Obtener todos los departamentos
         $departments = Department::all();
         return view('positions.create', compact('departments'));
     }
@@ -42,8 +51,8 @@ class PositionController extends Controller
         $validatedData = $request->validate([
             'nombre' => 'required|string|max:255',
             'fecha_inicio' => 'required|date',
-            'fecha_fin' => 'required|date',
-            'department_id' => 'required|exists:departments,id',
+            'fecha_fin' => $request->has('contrato_indefinido') ? 'nullable' : 'required|date',
+            'department_id' => 'required|exists:departments,id', // Validación para department_id
         ]);
 
         // Crear una nueva posición con los datos validados
@@ -61,6 +70,7 @@ class PositionController extends Controller
      */
     public function edit(Position $position)
     {
+        // Obtener todos los departamentos
         $departments = Department::all();
         return view('positions.edit', compact('position', 'departments'));
     }
@@ -79,7 +89,7 @@ class PositionController extends Controller
             'nombre' => 'required|string|max:255',
             'fecha_inicio' => 'required|date',
             'fecha_fin' => 'required|date',
-            'department_id' => 'required|exists:departments,id',
+            'department_id' => 'required|exists:departments,id', // Validación para department_id
         ]);
 
         // Actualizar la posición con los datos validados

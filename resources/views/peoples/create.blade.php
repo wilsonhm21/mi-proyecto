@@ -62,7 +62,7 @@
                     <div class="row">
                         <div class="form-group col-md-6">
                             <label for="genero">Género</label>
-                            <select class="form-control @error('genero') is-invalid @enderror" name="genero" id="genero">
+                            <select class="form-control @error('genero') is-invalid @enderror select2" name="genero" id="genero">
                                 <option value="">Seleccione</option>
                                 <option value="M" {{ old('genero') == 'M' ? 'selected' : '' }}>Masculino</option>
                                 <option value="F" {{ old('genero') == 'F' ? 'selected' : '' }}>Femenino</option>
@@ -85,7 +85,7 @@
                     <div class="row">
                         <div class="form-group col-md-6">
                             <label for="estado">Estado</label>
-                            <select class="form-control @error('estado') is-invalid @enderror" name="estado" id="estado">
+                            <select class="form-control @error('estado') is-invalid @enderror select2" name="estado" id="estado">
                                 <option value="">Seleccione</option>
                                 <option value="Activo" {{ old('estado') == 'Activo' ? 'selected' : '' }}>Activo</option>
                                 <option value="Inactivo" {{ old('estado') == 'Inactivo' ? 'selected' : '' }}>Inactivo</option>
@@ -128,7 +128,7 @@
                     <div class="row">
                         <div class="form-group col-md-4">
                             <label for="departamento_id">Departamento</label>
-                            <select class="form-control @error('departamento_id') is-invalid @enderror" name="departamento_id" id="departamento_id">
+                            <select class="form-control @error('departamento_id') is-invalid @enderror select2" name="departamento_id" id="departamento_id">
                                 <option value="">Seleccione</option>
                                 @foreach($departamentos as $departamento)
                                     <option value="{{ $departamento->id }}">{{ $departamento->name }}</option>
@@ -141,7 +141,7 @@
 
                         <div class="form-group col-md-4">
                             <label for="provincia_id">Provincia</label>
-                            <select class="form-control @error('provincia_id') is-invalid @enderror" name="provincia_id" id="provincia_id" disabled>
+                            <select class="form-control @error('provincia_id') is-invalid @enderror select2" name="provincia_id" id="provincia_id" disabled>
                                 <option value="">Seleccione</option>
                                 {{-- Las opciones se llenarán dinámicamente con JavaScript --}}
                             </select>
@@ -152,7 +152,7 @@
 
                         <div class="form-group col-md-4">
                             <label for="distrito_id">Distrito</label>
-                            <select class="form-control @error('distrito_id') is-invalid @enderror" name="distrito_id" id="distrito_id" disabled>
+                            <select class="form-control @error('distrito_id') is-invalid @enderror select2" name="distrito_id" id="distrito_id" disabled>
                                 <option value="">Seleccione</option>
                                 {{-- Las opciones se llenarán dinámicamente con JavaScript --}}
                             </select>
@@ -165,7 +165,7 @@
                     <div class="row">
                         <div class="form-group col-md-6">
                             <label for="position_id">Cargo</label>
-                            <select class="form-control @error('position_id') is-invalid @enderror" name="position_id" id="position_id">
+                            <select class="form-control @error('position_id') is-invalid @enderror select2" name="position_id" id="position_id">
                                 <option value="">Seleccione</option>
                                 @foreach($positions as $position)
                                     <option value="{{ $position->id }}">{{ $position->nombre }}</option>
@@ -178,7 +178,7 @@
 
                         <div class="form-group col-md-6">
                             <label for="department_id">Departamento de Trabajo</label>
-                            <select class="form-control @error('department_id') is-invalid @enderror" name="department_id" id="department_id">
+                            <select class="form-control @error('department_id') is-invalid @enderror select2" name="department_id" id="department_id">
                                 <option value="">Seleccione</option>
                                 @foreach($departments as $department)
                                     <option value="{{ $department->id }}">{{ $department->nombre }}</option>
@@ -203,10 +203,31 @@
 
 @stop
 
+@section('css')
+    <!-- Include Select2 CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+    <style>
+        .form-control, .select2-container--default .select2-selection--single {
+            box-sizing: border-box;
+        }
+    </style>
+@stop
+
 @section('js')
+    <!-- Include jQuery -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <!-- Include Select2 JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
     <script>
         $(document).ready(function(){
+            // Initialize Select2 for all select elements
+            $('.select2').select2({
+                width: '100%',
+                placeholder: "Seleccione",
+                allowClear: true
+            });
+
+            // Handle changes in departamento_id to update provincia_id and distrito_id
             $('#departamento_id').on('change', function() {
                 var departamento_id = $(this).val();
                 if(departamento_id) {
@@ -215,27 +236,21 @@
                         type: "GET",
                         dataType: "json",
                         success:function(data) {
-                            $('#provincia_id').empty();
-                            $('#provincia_id').append('<option value="">Seleccione</option>');
+                            $('#provincia_id').empty().append('<option value="">Seleccione</option>');
                             $.each(data, function(key, value) {
                                 $('#provincia_id').append('<option value="'+ value.id +'">'+ value.name +'</option>');
                             });
-                            $('#provincia_id').prop('disabled', false);
-                            $('#distrito_id').empty();
-                            $('#distrito_id').append('<option value="">Seleccione</option>');
-                            $('#distrito_id').prop('disabled', true);
+                            $('#provincia_id').prop('disabled', false).trigger('change');
+                            $('#distrito_id').empty().append('<option value="">Seleccione</option>').prop('disabled', true);
                         }
                     });
                 } else {
-                    $('#provincia_id').empty();
-                    $('#provincia_id').append('<option value="">Seleccione</option>');
-                    $('#provincia_id').prop('disabled', true);
-                    $('#distrito_id').empty();
-                    $('#distrito_id').append('<option value="">Seleccione</option>');
-                    $('#distrito_id').prop('disabled', true);
+                    $('#provincia_id').empty().append('<option value="">Seleccione</option>').prop('disabled', true);
+                    $('#distrito_id').empty().append('<option value="">Seleccione</option>').prop('disabled', true);
                 }
             });
 
+            // Handle changes in provincia_id to update distrito_id
             $('#provincia_id').on('change', function() {
                 var provincia_id = $(this).val();
                 if(provincia_id) {
@@ -244,8 +259,7 @@
                         type: "GET",
                         dataType: "json",
                         success:function(data) {
-                            $('#distrito_id').empty();
-                            $('#distrito_id').append('<option value="">Seleccione</option>');
+                            $('#distrito_id').empty().append('<option value="">Seleccione</option>');
                             $.each(data, function(key, value) {
                                 $('#distrito_id').append('<option value="'+ value.id +'">'+ value.name +'</option>');
                             });
@@ -253,9 +267,7 @@
                         }
                     });
                 } else {
-                    $('#distrito_id').empty();
-                    $('#distrito_id').append('<option value="">Seleccione</option>');
-                    $('#distrito_id').prop('disabled', true);
+                    $('#distrito_id').empty().append('<option value="">Seleccione</option>').prop('disabled', true);
                 }
             });
         });

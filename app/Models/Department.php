@@ -24,5 +24,9 @@ class Department extends Model
     {
         return $this->hasOne(HeadOfDepartment::class);
     }
+    public function positions()
+    {
+        return $this->hasMany(Position::class);
+    }
 
 }

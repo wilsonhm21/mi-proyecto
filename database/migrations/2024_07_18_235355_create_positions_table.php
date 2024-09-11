@@ -15,10 +15,10 @@ return new class extends Migration
             $table->id();
             $table->string('nombre');
             $table->string('fecha_inicio');
-            $table->string('fecha_fin');
-            $table->unsignedBigInteger('department_id');
-            $table->timestamps();
+            $table->date('fecha_fin')->nullable(false)->change();
+            $table->unsignedBigInteger('department_id')->after('id');
 
+            // Opcional: Agregar índice y establecer la clave foránea
             $table->foreign('department_id')->references('id')->on('departments')->onDelete('cascade');
         });
     }

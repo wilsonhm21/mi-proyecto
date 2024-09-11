@@ -41,11 +41,13 @@
                             @enderror
                         </div>
                         <div class="form-group">
-                            <label for="department_id">Departamento</label>
+                            <label for="department_id">Departamento de Trabajo</label>
                             <select class="form-control @error('department_id') is-invalid @enderror" name="department_id" id="department_id" required>
-                                <option value="">Seleccione</option>
+                                <option value="">Seleccione un departamento</option>
                                 @foreach($departments as $department)
-                                    <option value="{{ $department->id }}" {{ $department->id == old('department_id', $position->department_id) ? 'selected' : '' }}>{{ $department->nombre }}</option>
+                                    <option value="{{ $department->id }}" {{ old('department_id', $position->department_id) == $department->id ? 'selected' : '' }}>
+                                        {{ $department->name }}
+                                    </option>
                                 @endforeach
                             </select>
                             @error('department_id')

@@ -14,9 +14,9 @@ class Position extends Model
         'fecha_fin',
         'department_id'
     ];
-
     public function department()
     {
         return $this->belongsTo(Department::class);
     }
+
 }
