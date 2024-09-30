@@ -15,6 +15,17 @@ use App\Models\Provincia;
 
 class PeopleController extends Controller
 {
+    public function report(Request $request)
+    {
+        // Obtener todos los datos de las personas
+        $peoples = People::with(['departamento', 'provincia', 'distrito'])->orderBy('nombres')->get();
+
+        // Pasar variables a la vista
+        return view('reports.people_report', [
+            'peoples' => $peoples,
+        ]);
+    }
+
     public function exportExcel()
     {
         return Excel::download(new PeoplesExport, 'peoples.xlsx');

@@ -361,6 +361,18 @@ return [
             'text' => 'Persona',
             'url' => 'peoples',
             'icon' => 'fa fa-id-card',
+            'submenu' => [
+                [
+                    'text' => 'Lista de Personas',
+                    'url' => '/peoples',
+                    'icon' => 'fas fa-list',
+                ],
+                [
+                    'text' => 'Reporte de Personas',
+                    'url' => 'reports.people_report',
+                    'icon' => 'fas fa-file-pdf',
+                ],
+            ],
         ],
         [
             'text' => 'Equipo Asignado',

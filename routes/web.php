@@ -34,6 +34,8 @@ Route::middleware(['auth:sanctum',config('jetstream.auth_session'),'verified',
     Route::get('/peoples/{id}', [PeopleController::class, 'show'])->name('peoples.show');
     Route::get('/peoples/excel', [PeopleController::class, 'exportExcel'])->name('peoples.excel');
     Route::get('/peoples/pdf', [PeopleController::class, 'exportPdf'])->name('peoples.pdf');
+    Route::get('/peoples/reports', [PeopleController::class, 'report'])->name('reports.people_report');
+
 
     // maintenances.web
     Route::get('maintenances/{id}/report', [MaintenanceController::class, 'generateReport'])->name('maintenances.report');

@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('nombre');
             $table->string('fecha_inicio');
-            $table->date('fecha_fin')->nullable(false)->change();
-            $table->unsignedBigInteger('department_id')->after('id');
+            $table->date('fecha_fin')->nullable(); // Puedes dejarlo como nullable
+            $table->unsignedBigInteger('department_id'); // Eliminar '->after('id')'
 
             // Opcional: Agregar índice y establecer la clave foránea
             $table->foreign('department_id')->references('id')->on('departments')->onDelete('cascade');
